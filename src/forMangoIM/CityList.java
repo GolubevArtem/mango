@@ -10,7 +10,6 @@ import java.util.TreeMap;
 public class CityList {
 	//private HashMap<IdList, City> city = new HashMap<>();
 
-	Map<String, String> city = new TreeMap<String, String>();
 
 	
 	/*

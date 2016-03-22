@@ -81,7 +81,7 @@ public class TestIM {
 			testResult = false;
 		}*/
 		
-		try {
+	/*	try {
 			ob.goToPage("//a[contains(@href, '/shop/products')]",
 					"//a[contains(@href, '/shop/tariffs/vpbx')]", 
 					"Продукты");
@@ -268,7 +268,7 @@ public class TestIM {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			testResult = false;
-		}
+		}*/
 		
 // проверка доступности номеров для регионов		
 		try {
@@ -282,14 +282,19 @@ public class TestIM {
 		
 		try {
 			ob.goToPage("//a[contains(@href, '/shop/numbers')]",
-					"//div[@id='max_select_numbers_city']/a", 
+					"//h3[@class='numbers__name'][contains( . ,'" +  props.getProperty("City2") + "')]", 
 					"Страница номеров");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			testResult = false;
 		}
 
-
+		try {
+			ob.selectCities();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			testResult = false;
+		}
 		
 		
 		
@@ -365,28 +370,33 @@ public class TestIM {
 	
 	
 	
-	public void selectCities (String hoverDestination, String destination, String waitElement, String pageName) 
+	public void selectCities() 
 
 			throws InterruptedException, IOException {		
 		try{
-			
-			
-					Actions actions = new Actions(driver);
-					actions.moveToElement( driver.findElement(By.xpath("//div[@id='max_select_numbers_city']/a")));
+										
+		for(int i = 4; i < 25; i++){		// первые 3 включены по умолчанию	
+				
 					
+		driver.findElement(By.xpath("//div[@id='max_select_numbers_city']/a")).click(); 
 		
-					
-					actions.build().perform();
-		driver.findElement(By.xpath(destination)).click(); 
-		(new WebDriverWait(driver, 10))
-		.until(ExpectedConditions.visibilityOfElementLocated(By
-				.xpath(waitElement))); 
-		appendToLog(pageName + " - OK");
+		driver.findElement(By.xpath("//li[@select_city_from_list_id='"+ props.getProperty("IdList" + i) + "']")).click(); 
+		
+		
+		
+	//	(new WebDriverWait(driver, 15))
+//		.until(ExpectedConditions.visibilityOfElementLocated(By
+	//			.xpath("//h3[@class='numbers__name'][contains( . ,'" +  props.getProperty("City" + i) + "')]"))); 
+		
+		Thread.sleep(5000);
+		}
+		
+		appendToLog( "Номера для регионов - OK");
 		} catch (Exception e) {
 			System.out.println(e);
 			testResult = false;
-			takeScreen(pageName);
-			appendToLog(pageName + " - Fail");
+			takeScreen("Номера для регионов");
+			appendToLog("Номера для регионов - Fail");
 		}	
 	}
 	
