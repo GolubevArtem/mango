@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -45,7 +46,7 @@ public class TestIM {
 		}
 
 // Проход по ссылкам 		
-	/*	try {
+		try {
 			ob.goToPage("//a[contains(@href, '/shop/products')]",
 					"//a[contains(@class, 'btn-enter')]", 
 					"Главная ИМ");
@@ -79,9 +80,9 @@ public class TestIM {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			testResult = false;
-		}*/
+		}
 		
-	/*	try {
+		try {
 			ob.goToPage("//a[contains(@href, '/shop/products')]",
 					"//a[contains(@href, '/shop/tariffs/vpbx')]", 
 					"Продукты");
@@ -201,7 +202,7 @@ public class TestIM {
 		}
 		
 		try {
-			ob.goToPage("//a[contains(@href, '/shop/devices')]",        ////////////////////////////////////// 
+			ob.goToPage("//a[contains(@href, '/shop/devices')]",       
 					"//div[@class = 'add_cart']/a[@class = 'catalog_add']", 
 					"Переход в оборудование");
 		} catch (Exception ex) {
@@ -268,7 +269,7 @@ public class TestIM {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			testResult = false;
-		}*/
+		}
 		
 // проверка доступности номеров для регионов		
 		try {
@@ -306,14 +307,14 @@ public class TestIM {
 		
 		
 		
-		///////////////////////////////////////////////////
+	
 
-	/*	try { // Логин со страницы Манго через кнопку Вход
+		try { // Логин со страницы Манго через кнопку Вход
 			ob.loginIM();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			testResult = false;
-		} 		*/
+		} 		
 
 		ob.printResult();
 		driver.quit();
@@ -383,14 +384,12 @@ public class TestIM {
 		driver.findElement(By.xpath("//li[@select_city_from_list_id='"+ props.getProperty("IdList" + i) + "']")).click(); 
 		
 		
-		
-	//	(new WebDriverWait(driver, 15))
-//		.until(ExpectedConditions.visibilityOfElementLocated(By
-	//			.xpath("//h3[@class='numbers__name'][contains( . ,'" +  props.getProperty("City" + i) + "')]"))); 
-		
-		Thread.sleep(5000);
+		(new WebDriverWait(driver, 15))
+		.until(ExpectedConditions.visibilityOfElementLocated(By
+				.xpath("//h3[@class='numbers__name'][contains( . ,'" +  props.getProperty("City" + i) + "')]"))); 
+
 		}
-		
+		Thread.sleep(2000);
 		appendToLog( "Номера для регионов - OK");
 		} catch (Exception e) {
 			System.out.println(e);
@@ -411,15 +410,19 @@ public class TestIM {
 			throws InterruptedException, IOException {
 		
 		try{
-		driver.findElementByXPath("//a[contains(@class, 'btn-enter')]").click();
+		driver.findElementByXPath("//a[@id = 'open_login_popup']").click();
 		
 		driver.findElementByXPath("//input[@name='USER_LOGIN']").sendKeys(props.getProperty("login"));
 
 		driver.findElementByXPath("//input[@name='USER_PASSWORD']").sendKeys(props.getProperty("password"));
 
-		driver.findElementByXPath("//input[@value='Войти']").click();
+		driver.findElementByXPath("//input[@id='submit_system_auth']").click();
 
-		waitForElementAppear(By.xpath("//a[contains(@href, '?logout=yes')]"));
+		
+		(new WebDriverWait(driver, 10))
+		.until(ExpectedConditions.visibilityOfElementLocated(By
+				.xpath("//a[contains(@href, '?logout=yes')]"))); 
+
 		appendToLog("Логин ИМ - OK");
 		}catch (Exception e) {
 			System.out.println(e);
@@ -498,7 +501,8 @@ public class TestIM {
 		InputStream is = null;
 
 		try {
-			File f = new File("res/config.properties");
+			//File f = new File("res/config.properties");
+			File f = new File("res/config.txt");
 
 			is = new FileInputStream(f);
 		} catch (Exception e) {
@@ -507,7 +511,9 @@ public class TestIM {
 
 		try {
 
-			props.load(is);
+		//	props.load(is);
+			
+		props.load(new InputStreamReader(is, "UTF-8"));
 
 		} catch (IOException e) {
 
